@@ -115,6 +115,8 @@ class Summer {
       var data =
           ref.invoke(routePaths[request.uri.path].simpleName, []).reflectee;
 
+      // Convert classes to JSON here. (Do not convert for string, and other basic types.)
+
       request.response.write(data);
 
       await request.response.close();
