@@ -17,5 +17,5 @@ WORKDIR /home/gitpod
 ENV PUB_CACHE=/home/gitpod/.pub_cache
 ENV PATH="/home/gitpod/dartksdk/bin:/home/gitpod/flutter/bin:$PATH"
 
-RUN wget https://storage.googleapis.com/dart-archive/channels/stable/release/2.8.4/sdk/dartsdk-linux-x64-release.zip && \
+RUN curl -O https://storage.googleapis.com/dart-archive/channels/stable/release/2.8.4/sdk/dartsdk-linux-x64-release.zip && \
     unzip dartsdk-linux-x64-release.zip
