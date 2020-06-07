@@ -1,0 +1,55 @@
+{
+  "configVersion": 2,
+  "packages": [
+    {
+      "name": "dart_reflection_test",
+      "rootUri": "file:///C:/Users/ibonny/AppData/Roaming/Pub/Cache/git/dart_reflection_test-0dfc20746a6150e069ff92611d8f136cc5a0dd52/",
+      "packageUri": "lib/",
+      "languageVersion": "2.0"
+    },
+    {
+      "name": "ini",
+      "rootUri": "file:///C:/Users/ibonny/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/ini-2.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.0"
+    },
+    {
+      "name": "intl",
+      "rootUri": "file:///C:/Users/ibonny/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/intl-0.16.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.5"
+    },
+    {
+      "name": "logging",
+      "rootUri": "file:///C:/Users/ibonny/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/logging-0.11.4",
+      "packageUri": "lib/",
+      "languageVersion": "2.0"
+    },
+    {
+      "name": "path",
+      "rootUri": "file:///C:/Users/ibonny/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/path-1.7.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.0"
+    },
+    {
+      "name": "quiver_log",
+      "rootUri": "file:///C:/Users/ibonny/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/quiver_log-1.0.6",
+      "packageUri": "lib/",
+      "languageVersion": "1.2"
+    },
+    {
+      "name": "stack_trace",
+      "rootUri": "file:///C:/Users/ibonny/AppData/Roaming/Pub/Cache/hosted/pub.dartlang.org/stack_trace-1.9.3",
+      "packageUri": "lib/",
+      "languageVersion": "1.23"
+    },
+    {
+      "name": "dart_summer_framework",
+      "rootUri": "../",
+      "packageUri": "lib/"
+    }
+  ],
+  "generated": "2020-06-06T15:06:19.119090Z",
+  "generator": "pub",
+  "generatorVersion": "2.8.4"
+}

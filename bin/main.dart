@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import '../lib/summer.dart';
 
 class SomeClass {
@@ -19,8 +21,17 @@ class SampleController {
   }
 
   @GetMapping("/blah")
-  Map blahRoute() {
-    return SomeClass("first", "second").toJson();
+  SomeClass blahRoute() {
+    return SomeClass("first", "second");
+  }
+
+  @PostMapping("/funtimes")
+  String postMappingRequest(@RequestBody String content) {
+    var data = jsonDecode(content) as Map;
+
+    print(data);
+
+    return "OK, we got this, too.";
   }
 }
 

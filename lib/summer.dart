@@ -1,5 +1,16 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:mirrors';
+
+import 'package:quiver_log/log.dart';
+import 'package:logging/logging.dart';
+
+class SimpleStringFormatter implements FormatterBase<String> {
+  @override
+  String call(LogRecord record) {
+    return "${record.time} ${record}";
+  }
+}
 
 const Controller = "Controller";
 
@@ -8,6 +19,16 @@ class GetMapping {
 
   const GetMapping([this.route]);
 }
+
+class PostMapping {
+  final String route;
+
+  const PostMapping([this.route]);
+}
+
+const RequestBody = "RequestBody";
+
+// ===================== Main Class ======================
 
 class Summer {
   static var controllers = [];
@@ -44,21 +65,37 @@ class Summer {
     return false;
   }
 
-  static GetMapping isGetMapping(item) {
+  static Object isSummerMapping(item) {
     if (item.metadata.length == 0) {
       return null;
     }
 
     for (var i in item.metadata) {
-      print(i);
-
       if (i.reflectee is GetMapping) {
+        return i.reflectee;
+      }
+
+      if (i.reflectee is PostMapping) {
         return i.reflectee;
       }
     }
 
     return null;
   }
+
+  // static PostMapping isPostMapping(item) {
+  //   if (item.metadata.length == 0) {
+  //     return null;
+  //   }
+
+  //   for (var i in item.metadata) {
+  //     if (i.reflectee is PostMapping) {
+  //       return i.reflectee;
+  //     }
+  //   }
+
+  //   return null;
+  // }
 
   static void loadControllers() {
     getDeclarations().forEach((k, v) {
@@ -70,13 +107,25 @@ class Summer {
     });
   }
 
-  static void runWebServer() async {
+  static _handleGetRequest(HttpRequest request) {}
+
+  static _findRequestBodyFields(ref) {
+    print(ref);
+  }
+
+  static void runWebServer({String host = "localhost", int port = 4040}) async {
+    var logger = Logger("SummerLogger");
+
+    var appender = PrintAppender(SimpleStringFormatter());
+
+    appender.attachLogger(logger);
+
     var server = await HttpServer.bind(
-      InternetAddress.loopbackIPv4,
-      4040,
+      host,
+      port,
     );
 
-    print("Listening on localhost:4040");
+    print("Listening on $host:$port");
 
     var routePaths = {};
     var controllerPaths = {};
@@ -85,22 +134,31 @@ class Summer {
       var ref = reflect(controller).type;
 
       ref.declarations.forEach((k, v) {
-        final gm = isGetMapping(v);
+        final sm = isSummerMapping(v);
 
-        if (gm == null) {
+        if (sm == null) {
           return;
         }
 
-        routePaths[gm.route] = v;
-        controllerPaths[gm.route] = controller;
+        if (sm is GetMapping) {
+          routePaths["GET " + sm.route] = v;
+          controllerPaths["GET " + sm.route] = controller;
+        }
+
+        if (sm is PostMapping) {
+          routePaths["POST " + sm.route] = v;
+          controllerPaths["POST " + sm.route] = controller;
+        }
       });
     }
 
-    await for (HttpRequest request in server) {
-      print(request.method);
-      print(request.uri.path);
+    print(routePaths);
+    print(controllerPaths);
 
-      if (!routePaths.containsKey(request.uri.path)) {
+    await for (HttpRequest request in server) {
+      logger.info("${request.method} ${request.uri.path}");
+
+      if (!routePaths.containsKey(request.method + " " + request.uri.path)) {
         request.response.write("Route not found.");
 
         await request.response.close();
@@ -110,14 +168,51 @@ class Summer {
 
       // request.response.write(routePaths[request.uri.path].call([]));
 
-      var ref = reflect(controllerPaths[request.uri.path]);
+      print(request.method + " " + request.uri.path);
 
-      var data =
-          ref.invoke(routePaths[request.uri.path].simpleName, []).reflectee;
+      var ref =
+          reflect(controllerPaths[request.method + " " + request.uri.path]);
+
+      String content = null;
+
+      if (request.method == "POST") {
+        content = await utf8.decoder.bind(request).join();
+
+        var fields = _findRequestBodyFields(ref);
+      }
+
+      var data;
+
+      if (content == null) {
+        data = ref.invoke(
+          routePaths[request.method + " " + request.uri.path].simpleName,
+          [],
+        ).reflectee;
+      } else {
+        data = ref.invoke(
+          routePaths[request.method + " " + request.uri.path].simpleName,
+          [content],
+        ).reflectee;
+      }
 
       // Convert classes to JSON here. (Do not convert for string, and other basic types.)
 
-      request.response.write(data);
+      var output;
+
+      try {
+        if (data is Map) {
+          output = json.encode(data);
+        } else {
+          output = data.toJson();
+        }
+
+        request.response.headers
+            .add(HttpHeaders.contentTypeHeader, "application/json");
+      } catch (e) {
+        output = data;
+      }
+
+      request.response.write(output);
 
       await request.response.close();
     }

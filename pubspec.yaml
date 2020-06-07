@@ -1,2 +1,8 @@
 name: dart_summer_framework
 description: A web framework aimed at being like Spring Boot Web with some ORM sprinkled in.
+
+dependencies:
+  quiver_log: ^1.0.6
+  dart_reflection_test:
+    git: https://github.com/ibonny/dart_reflection_test.git
+    
