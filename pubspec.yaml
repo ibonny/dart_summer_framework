@@ -6,3 +6,4 @@ dependencies:
   dart_reflection_test:
     git: https://github.com/ibonny/dart_reflection_test.git
     
+  jaguar_hotreload: ^2.0.2

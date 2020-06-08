@@ -33,6 +33,11 @@ class SampleController {
 
     return "OK, we got this, too.";
   }
+
+  @GetMapping("/anotherpart")
+  String getAnotherPart() {
+    return "OK, yep.";
+  }
 }
 
 void main(List<String> args) {
