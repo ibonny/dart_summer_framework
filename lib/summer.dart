@@ -218,9 +218,9 @@ class Summer {
     }
   }
 
-  static void run() {
+  static void run({String host = "localhost", int port = 4040}) {
     loadControllers();
 
-    runWebServer();
+    runWebServer(host, port);
   }
 }
