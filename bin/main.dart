@@ -41,5 +41,5 @@ class SampleController {
 }
 
 void main(List<String> args) {
-  Summer.run();
+  Summer.run("0.0.0.0", 4040);
 }
