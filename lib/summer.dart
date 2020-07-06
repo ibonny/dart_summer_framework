@@ -221,6 +221,6 @@ class Summer {
   static void run({String host = "localhost", int port = 4040}) {
     loadControllers();
 
-    runWebServer(host, port);
+    runWebServer(host = host, port = port);
   }
 }
