@@ -41,5 +41,5 @@ class SampleController {
 }
 
 void main(List<String> args) {
-  Summer.run("0.0.0.0", 4040);
+  Summer.run(host = "0.0.0.0", port = 4040);
 }
